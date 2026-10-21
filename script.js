@@ -40,9 +40,38 @@ function randomItem(a){return a[Math.floor(Math.random()*a.length)]}
 $('random').onclick=()=>{state.hair=randomItem(hairs);state.hairColor=randomItem(palettes.hairColor)[1].slice(1);state.skin=randomItem(palettes.skin)[1].slice(1);state.eyes=randomItem(palettes.eyes)[1];state.mouth=randomItem(palettes.mouth)[1];state.glasses=Math.random()>.6?'1':'0';state.accent=randomItem(colors);setForm();render()};
 $('reset').onclick=()=>{Object.assign(state,{alias:'PLAYER 01',role:'PROGRAMADOR/A WEB',hair:'long01',hairColor:'593a2b',skin:'e6b98d',eyes:'variant01',mouth:'variant01',glasses:'0',accent:colors[0]});setForm();render()};
 function roundRect(ctx,x,y,w,h,r,fill){ctx.beginPath();ctx.roundRect(x,y,w,h,r);ctx.fillStyle=fill;ctx.fill()}
-async function drawCard(){const canvas=document.createElement('canvas');canvas.width=900;canvas.height=1320;const c=canvas.getContext('2d');const bg=c.createLinearGradient(0,0,900,1320);bg.addColorStop(0,'#18264e');bg.addColorStop(1,'#080d21');c.fillStyle=bg;c.fillRect(0,0,900,1320);c.strokeStyle=state.accent;c.lineWidth=9;c.strokeRect(22,22,856,1276);c.fillStyle='#85e9ff';c.font='bold 25px Arial';c.fillText('INSTITUTO DE EDUCACIÓN SUPERIOR SAN PÍO DE PIETRELCINA ',70,95);c.fillStyle='#fff';c.font='bold 55px Arial';c.fillText('FERIA DE CIENCIAS 2026',70,167);roundRect(c,65,205,770,715,28,'#202d59');const glow=c.createRadialGradient(450,555,10,450,555,350);glow.addColorStop(0,state.accent+'99');glow.addColorStop(1,'#202d5900');c.fillStyle=glow;c.fillRect(65,205,770,715);
+async function drawCard()
+{const canvas=document.createElement('canvas');canvas.width=900;canvas.height=1320;const c=canvas.getContext('2d');
+const bg=c.createLinearGradient(0,0,900,1320);bg.addColorStop(0,'#18264e');bg.addColorStop(1,'#080d21')
+;c.fillStyle=bg;c.fillRect(0,0,900,1320);c.strokeStyle=state.accent;c.lineWidth=9;c.strokeRect(22,22,856,1276);
+
+c.textAlign = 'center'; c.fillStyle='#85e9ff';c.font='bold 25px Arial';
+c.fillText('INSTITUTO DE EDUCACIÓN SUPERIOR SAN PÍO DE PIETRELCINA ', 450, 95, 790);
+
+c.fillStyle='#fff';c.font='bold 55px Arial';c.fillText('FERIA DE CIENCIAS 2026',450, 167, 790);
+
+c.textAlign = 'left';
+roundRect(c,65,205,770,715,28,'#202d59')
+
+;const glow=c.createRadialGradient(450,555,10,450,555,350);glow.addColorStop(0,state.accent+'99');glow.addColorStop(1,'#202d5900');c.fillStyle=glow;c.fillRect(65,205,770,715);
+
 const img=await loadImage(avatarUrl());c.drawImage(img,120,255,660,660);
-c.fillStyle='#ff85d7';c.font='bold 21px Arial';c.fillText('IDENTIDAD DESBLOQUEADA',70,965);c.fillStyle='#fff';let alias=state.alias.trim()||'PLAYER 01';c.font=`bold ${alias.length>17?42:56}px Arial`;c.fillText(alias,70,1030,750);c.fillStyle=state.accent;c.font='bold 27px Arial';c.fillText(state.role,70,1080,750);roundRect(c,65,1110,770,135,18,'#21375e');c.fillStyle='#fff';c.font='bold 25px Arial';c.fillText('¡YO PARTICIPÉ EN LA',93,1159);c.fillText('FERIA DE CIENCIAS 2026! ',93,1193);c.fillStyle='#b8c8e5';c.font='17px Arial';c.fillText('LO QUE IMAGINÁS, PODÉS PROGRAMARLO.',93,1224);return canvas}
+c.fillStyle='#ff85d7';c.font='bold 21px Arial';c.fillText('IDENTIDAD DESBLOQUEADA',70,965);c.fillStyle='#fff';let alias=state.alias.trim()||'PLAYER 01';c.font=`bold ${alias.length>17?42:56}px Arial`;c.fillText(alias,70,1030,750);c.fillStyle=state.accent;
+c.font='bold 27px Arial';c.fillText(state.role,70,1080,750);roundRect(c,65,1110,770,135,18,'#21375e');
+
+c.fillStyle='#fff';c.font='bold 25px Arial'; 
+c.fillText('¡YO PARTICIPÉ EN LA FERIA DE CIENCIAS 2026!',93,1159);
+c.fillStyle='#85e9ff'
+c.fillText('TEC. SUPERIOR EN DESARROLLO DE SOFTWARE ',93,1193);
+
+c.fillStyle='#b8c8e5';
+c.font='17px Arial';
+c.fillText('LO QUE IMAGINÁS, PODÉS PROGRAMARLO.',93,1224) ;
+return canvas}
+
+
+
+
 function loadImage(url){return new Promise((resolve,reject)=>{const img=new Image();img.crossOrigin='anonymous';img.onload=()=>resolve(img);img.onerror=()=>reject(new Error('No se pudo descargar la ilustración'));img.src=url})}
 $('download').onclick=async()=>{try{$('status').textContent='Preparando imagen…';const canvas=await drawCard();const a=document.createElement('a');a.download='Identidad_Digital_San_Pio_2026.png';a.href=canvas.toDataURL('image/png');a.click();$('status').textContent='¡Credencial descargada!'}catch(e){$('status').textContent='No se pudo exportar. Revisá tu conexión o probá con el sitio publicado en GitHub Pages.';console.error(e)}};
 function shareUrl(){if(location.protocol==='file:')return null;const url=new URL(location.href);url.search='';const data={};for(const key of Object.keys(state))data[key]=state[key];url.searchParams.set('avatar',encodeURIComponent(JSON.stringify(data)));return url.href}
